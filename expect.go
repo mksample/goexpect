@@ -162,15 +162,20 @@ func changeChk(f func(*GExpect) bool) Option {
 // SetEnv sets the environmental variables of the spawned process.
 func SetEnv(env []string) Option {
 	return func(e *GExpect) Option {
-		if e.cmd == nil {
+		if e.ssh != nil {
+			var prev []string
 			for _, val := range env {
 				res := strings.Split(val, "=")
 				e.ssh.SetEnv(res[0], res[1])
+				prev = append(prev, fmt.Sprintf("%s=", res[0]))
 			}
+			return SetEnv(prev)
+		} else if cmd != nil {
+			prev := e.cmd.Env
+			e.cmd.Env = env
+			return SetEnv(prev)
 		} else {
-		prev := e.cmd.Env
-		e.cmd.Env = env
-		return SetEnv(prev)
+			return SetEnv(nil)
 		}
 	}
 }
