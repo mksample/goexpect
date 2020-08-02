@@ -165,7 +165,10 @@ func SetEnv(env []string) Option {
 		if e.ssh != nil {
 			var prev []string
 			for _, val := range env {
-				res := strings.Split(val, "=")
+				res := strings.SplitN(val, "=", 2)
+				if len(res) < 2 {
+					res = append(res, "")
+				}
 				e.ssh.Setenv(res[0], res[1])
 				prev = append(prev, fmt.Sprintf("%s=", res[0]))
 			}
