@@ -170,7 +170,7 @@ func SetEnv(env []string) Option {
 				prev = append(prev, fmt.Sprintf("%s=", res[0]))
 			}
 			return SetEnv(prev)
-		} else if cmd != nil {
+		} else if e.cmd != nil {
 			prev := e.cmd.Env
 			e.cmd.Env = env
 			return SetEnv(prev)
